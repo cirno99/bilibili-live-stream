@@ -17,15 +17,13 @@ import (
 var commands = map[string]string{
 	"windows": "start",
 	"darwin":  "open",
-	"linux":   "xdg-open",
+	"linux":   "mpv",
 }
 
-func GetRealRoomID() int64 {
-	fmt.Println("请输入BiliBili直播间房间号：")
-	var roomID string
-	_, _ = fmt.Scanln(&roomID)
+func GetRealRoomID(roomID *string) int64 {
+	_, _ = fmt.Scanln(roomID)
 	address := "https://api.live.bilibili.com/room/v1/Room/room_init"
-	result := GetRequest(address, map[string]string{"id": roomID})
+	result := GetRequest(address, map[string]string{"id": *roomID})
 	realRoomID := HandlerLiveStatus(result)
 	return realRoomID
 }
@@ -98,7 +96,8 @@ func IsOpenBrowser(url string) bool {
 }
 
 func OpenBrowser(content string) error {
-	cmd := exec.Command(commands[runtime.GOOS], "potplayer://"+content)
+	cmd := exec.Command(commands[runtime.GOOS], content)
+	fmt.Println(cmd)
 	return cmd.Start()
 }
 

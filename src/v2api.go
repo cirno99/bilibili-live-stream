@@ -2,16 +2,18 @@ package bili_live_stream
 
 import (
 	"fmt"
-	"github.com/tidwall/gjson"
+	"os"
 	"strconv"
+
+	"github.com/tidwall/gjson"
 )
 
 const V2API string = "https://api.live.bilibili.com/xlive/web-room/v2/index/getRoomPlayInfo"
 
-func V2Initialization() {
-	realRoomID := GetRealRoomID()
+func V2Initialization(roomId string) {
+	realRoomID := GetRealRoomID(&roomId)
 	if realRoomID == -1 {
-		V2FormatInit()
+		os.Exit(1)
 	}
 	param := map[string]string{"platform": "h5", "protocol": "0", "format": "0,1,2", "codec": "0", "room_id": strconv.FormatInt(realRoomID, 10)}
 	quality := GetChooseQuality(param, "data.playurl_info.playurl.g_qn_desc", V2API)
@@ -34,9 +36,4 @@ func V2HandlerQualityUrl(quality int64, param map[string]string) {
 	if !IsOpenBrowser(realUrl) {
 		IsOutput(realUrl)
 	}
-}
-
-func V2FormatInit() {
-	fmt.Println()
-	V2Initialization()
 }

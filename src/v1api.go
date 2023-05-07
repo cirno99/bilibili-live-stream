@@ -10,7 +10,8 @@ import (
 const V1API string = "https://api.live.bilibili.com/xlive/web-room/v1/playUrl/playUrl"
 
 func V1Initialization() {
-	realRoomID := GetRealRoomID()
+	id := "1"
+	realRoomID := GetRealRoomID(&id)
 	if realRoomID == -1 {
 		V1FormatInit()
 	}
